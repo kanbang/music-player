@@ -20,7 +20,7 @@ class MusicListService:
         ret.name = source.name
         ret.play_count = source.play_count
         ret.created = source.created
-        ret.musics = source.musics[0:len(source.musics)]
+        ret.musics_table = source.musics_table[0:len(source.musics_table)]
         return ret
 
     def list_(self, ml: MusicList) -> tuple:
@@ -30,15 +30,15 @@ class MusicListService:
     def get_local_music(self) -> MusicList:
         """获取本地音乐歌单, 同时查出该歌单下的所属音乐"""
         music_list = self.music_list_dao.get_by_id(MusicList.DEFAULT_ID)
-        musics = self.music_dao.list_by_mid(music_list.id)
-        music_list.musics = musics
+        musics_table = self.music_dao.list_by_mid(music_list.id)
+        music_list.musics_table = musics_table
         return music_list
 
     def get_by_id(self, id_: int) -> MusicList:
         """ 根据ID获取歌单信息, 同时获取该歌单的所属音乐 """
         music_list = self.music_list_dao.get_by_id(id_)
-        musics = self.music_dao.list_by_mid(id_)
-        music_list.musics = musics
+        musics_table = self.music_dao.list_by_mid(id_)
+        music_list.musics_table = musics_table
         return music_list
 
     def logic_delete(self, _id: int):
@@ -60,7 +60,7 @@ class MusicListService:
     def to_play_list(music_list: MusicList) -> PlayList:
         """ 把MusicList 转成 PlayList """
         play_list = PlayList()
-        play_list.set_musics(music_list.musics)
+        play_list.set_musics(music_list.musics_table)
         return play_list
 
 

@@ -24,31 +24,31 @@ class SearchLocalMusic(QObject):
         # 以 .mp3结尾, 大于100kb的文件
         paths = set()
         # 合法的mp3文件
-        musics = []
+        musics_table = []
         pans = SearchLocalMusic.__get_exist_pan()
         for pan in pans:
             paths = SearchLocalMusic.__loop_all(pan, paths)
-        musics = SearchLocalMusic.__get_mp3_info(paths, musics)
-        print(len(musics), "  ", musics)
-        SearchLocalMusic.__to_database(musics)
+        musics_table = SearchLocalMusic.__get_mp3_info(paths, musics_table)
+        print(len(musics_table), "  ", musics_table)
+        SearchLocalMusic.__to_database(musics_table)
 
     def search_in_path(self, search_paths: list):
         self.begin_search.emit()
         # 以 .mp3结尾, 大于100kb的文件
         paths = set()
         # 合法的mp3文件
-        musics = []
+        musics_table = []
         for search_path in search_paths:
             paths = SearchLocalMusic.__loop_all(search_path, paths)
-        musics = SearchLocalMusic.__get_mp3_info(list(paths), musics)
-        self.__to_database(musics)
+        musics_table = SearchLocalMusic.__get_mp3_info(list(paths), musics_table)
+        self.__to_database(musics_table)
         self.end_search.emit()
 
     @staticmethod
     # 把搜索结果存入数据库
-    def __to_database(musics: list):
+    def __to_database(musics_table: list):
         music_service = MusicService()
-        music_service.batch_insert(musics)
+        music_service.batch_insert(musics_table)
 
     @staticmethod
     def __get_exist_pan():
@@ -79,8 +79,8 @@ class SearchLocalMusic(QObject):
 
     @staticmethod
     # paths: 文件路径列表
-    # musics: Music列表
-    def __get_mp3_info(paths: list, musics: list):
+    # musics_table: Music列表
+    def __get_mp3_info(paths: list, musics_table: list):
         for path in paths:
             try:
                 mp3 = MP3(path)
@@ -112,12 +112,12 @@ class SearchLocalMusic(QObject):
                     music.album = album
                     music.duration = duration
                     music.size = size
-                    musics.append(music)
+                    musics_table.append(music)
             except IndexError as e:
                 pass
             except UnicodeDecodeError as e1:
                 pass
-        return musics
+        return musics_table
 
 
 if __name__ == "__main__":

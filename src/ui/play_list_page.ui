@@ -159,7 +159,7 @@
       <attribute name="title">
        <string>历史记录</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="view_music_gridlayout">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -176,7 +176,7 @@
         <number>0</number>
        </property>
        <item row="0" column="0">
-        <widget class="QWidget" name="widget_2" native="true">
+        <widget class="QWidget" name="list_top_panel" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
            <number>10</number>

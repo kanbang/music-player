@@ -80,30 +80,30 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.play_list, "")
         self.history = QtWidgets.QWidget()
         self.history.setObjectName("history")
-        self.gridLayout_3 = QtWidgets.QGridLayout(self.history)
-        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_3.setSpacing(0)
-        self.gridLayout_3.setObjectName("gridLayout_3")
-        self.widget_2 = QtWidgets.QWidget(self.history)
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.view_music_gridlayout = QtWidgets.QGridLayout(self.history)
+        self.view_music_gridlayout.setContentsMargins(0, 0, 0, 0)
+        self.view_music_gridlayout.setSpacing(0)
+        self.view_music_gridlayout.setObjectName("view_music_gridlayout")
+        self.list_top_panel = QtWidgets.QWidget(self.history)
+        self.list_top_panel.setObjectName("list_top_panel")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.list_top_panel)
         self.horizontalLayout_2.setContentsMargins(20, -1, 20, -1)
         self.horizontalLayout_2.setSpacing(10)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_2 = QtWidgets.QLabel(self.widget_2)
+        self.label_2 = QtWidgets.QLabel(self.list_top_panel)
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_2.addWidget(self.label_2)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem1)
-        self.pushButton_3 = QtWidgets.QPushButton(self.widget_2)
+        self.pushButton_3 = QtWidgets.QPushButton(self.list_top_panel)
         self.pushButton_3.setObjectName("pushButton_3")
         self.horizontalLayout_2.addWidget(self.pushButton_3)
-        self.gridLayout_3.addWidget(self.widget_2, 0, 0, 1, 1)
+        self.view_music_gridlayout.addWidget(self.list_top_panel, 0, 0, 1, 1)
         self.tableWidget_2 = TableWidget(self.history)
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(0)
         self.tableWidget_2.setRowCount(0)
-        self.gridLayout_3.addWidget(self.tableWidget_2, 1, 0, 1, 1)
+        self.view_music_gridlayout.addWidget(self.tableWidget_2, 1, 0, 1, 1)
         self.tabWidget.addTab(self.history, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
 
@@ -179,10 +179,10 @@ class PlayListPage(QWidget, Ui_Form):
                 self.parent().update_music_list(data.id)
                 # 若是本地音乐
                 if data.id == 0:
-                    self.parent().stackedWidget_2.setCurrentWidget(self.parent().local_music_page)
+                    self.parent().stacked_view.setCurrentWidget(self.parent().local_music_page)
                 # 若是其他歌单
                 else:
-                    self.parent().stackedWidget_2.setCurrentWidget(self.parent().music_list_detail)
+                    self.parent().stacked_view.setCurrentWidget(self.parent().music_list_detail)
                     self.parent().show_musics_data()
             self.hide()
 
@@ -201,33 +201,33 @@ class PlayListPage(QWidget, Ui_Form):
         rows = set()
         for item in items:
             rows.add(item.row())
-        musics = []
+        musics_table = []
         for row in rows:
             music = self.parent().cur_play_list.get(row)
-            musics.append(music)
+            musics_table.append(music)
         # 只选中了一行
         if len(rows) == 1:
             self.play_list_menu.addAction(act3)
         # 设置子菜单归属于act2
-        self.create_collect_menu(musics)
+        self.create_collect_menu(musics_table)
         act2.setMenu(self.collect_menu)
         self.play_list_menu.addMenu(self.collect_menu)
 
         self.play_list_menu.addSeparator()
         self.play_list_menu.addAction(act4)
-        act1.triggered.connect(lambda: self.parent().on_act_play(musics))
-        act3.triggered.connect(lambda: self.parent().on_act_open_file(musics))
-        act4.triggered.connect(lambda: self.on_act_del(musics))
+        act1.triggered.connect(lambda: self.parent().on_act_play(musics_table))
+        act3.triggered.connect(lambda: self.parent().on_act_open_file(musics_table))
+        act4.triggered.connect(lambda: self.on_act_del(musics_table))
         self.play_list_menu.exec(QCursor.pos())
 
-    def on_act_del(self, musics: list):
+    def on_act_del(self, musics_table: list):
         cur = self.parent().cur_play_list.get_current_music()
         playing = False
-        for music in musics:
+        for music in musics_table:
             if music.path == cur.path and music.mid == cur.mid:
                 playing = True
 
-        for music in musics:
+        for music in musics_table:
             self.parent().cur_play_list.remove(music)
         self.show_data(self.parent().cur_play_list)
         self.parent().label_play_count.setText(str(self.parent().cur_play_list.size()))
@@ -241,7 +241,7 @@ class PlayListPage(QWidget, Ui_Form):
             self.parent().btn_start.setStyleSheet("QPushButton{border-image:url(./resource/image/播放.png)}" +
                                                   "QPushButton:hover{border-image:url(./resource/image/播放2.png)}")
 
-    def create_collect_menu(self, musics: list):
+    def create_collect_menu(self, musics_table: list):
         self.collect_menu.clear()
         act0 = self.create_widget_action("./resource/image/添加歌单.png", "创建新歌单")
         self.collect_menu.addAction(act0)
@@ -250,7 +250,7 @@ class PlayListPage(QWidget, Ui_Form):
         for music_list in mls:
             act = self.create_widget_action("./resource/image/歌单.png", music_list.name, music_list)
             self.collect_menu.addAction(act)
-            act.triggered.connect(lambda: self.parent().on_acts_choose(musics))
+            act.triggered.connect(lambda: self.parent().on_acts_choose(musics_table))
 
     def __init_ui(self):
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -267,7 +267,7 @@ class PlayListPage(QWidget, Ui_Form):
             "background:#f9f9f9;border:none;border-bottom:1px solid #efefef;border-left:1px solid #c3c3c4;")
         self.label.setStyleSheet("border:none")
         self.label_2.setStyleSheet("border:none")
-        self.widget_2.setStyleSheet(
+        self.list_top_panel.setStyleSheet(
             "background:#f9f9f9;border:none;border-bottom:1px solid #efefef;border-left:1px solid #c3c3c4;")
         self.pushButton.setStyleSheet("QPushButton{color:#666666;border:none;}QPushButton:hover{color:#444444;}")
         self.pushButton_2.setStyleSheet("QPushButton{color:#666666;border:none;}QPushButton:hover{color:#444444;}")

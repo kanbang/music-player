@@ -32,8 +32,8 @@ class PlayList(QObject):
     def get_musics(self):
         return self.__musics
 
-    def set_musics(self, musics):
-        self.__musics = musics
+    def set_musics(self, musics_table):
+        self.__musics = musics_table
 
     def set_play_mode(self, PlayList_mode):
         self.play_mode = PlayList_mode

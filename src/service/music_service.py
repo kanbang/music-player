@@ -39,8 +39,8 @@ class MusicService:
         查询该歌单所属的所有歌曲
         :param mid: 歌单id
         """
-        musics = self.music_dao.list_by_mid(mid)
-        return tuple(musics)
+        musics_table = self.music_dao.list_by_mid(mid)
+        return tuple(musics_table)
 
     def get_by_id(self, _id: int) -> Music:
         """根据ID获取歌曲"""
@@ -51,17 +51,17 @@ class MusicService:
         music = Music()
         music.mid = mid
         music.path = path
-        musics = self.music_dao.list_(music)
-        return len(musics) != 0
+        musics_table = self.music_dao.list_(music)
+        return len(musics_table) != 0
 
     def insert(self, music_: Music):
         self.music_dao.insert(music_)
 
-    def batch_insert(self, musics: list):
+    def batch_insert(self, musics_table: list):
         """ 重复数据不会被插入(重复指 path 及 mid 相同) """
         total_list = self.list_(Music())
         data = []
-        for music in musics:
+        for music in musics_table:
             flag = True
             for m in total_list:
                 if music.path == m.path and music.mid == m.mid:
@@ -95,9 +95,9 @@ class MusicService:
         music = self.get_by_id(id_)
         if music.mid != music_list.id:
             return -1
-        musics = music_list.musics
-        for i in range(len(musics)):
-            m = musics[i]
+        musics_table = music_list.musics_table
+        for i in range(len(musics_table)):
+            m = musics_table[i]
             if m.id == music.id:
                 return i
         return -1
@@ -106,14 +106,14 @@ class MusicService:
         """ 在该歌单内, 根据title, artist, album搜索, 返回搜索结果集. """
         keyword = keyword.lower()
         ret = self.music_list_dao.get_by_id(mid)
-        musics = self.list_by_mid(mid)
-        ret.musics = []
-        for m in musics:
+        musics_table = self.list_by_mid(mid)
+        ret.musics_table = []
+        for m in musics_table:
             title = m.title.lower()
             artist = m.artist.lower()
             album = m.album.lower()
             if title.find(keyword) != -1 or artist.find(keyword) != -1 or album.find(keyword) != -1:
-                ret.musics.append(m)
+                ret.musics_table.append(m)
         return ret
 
 

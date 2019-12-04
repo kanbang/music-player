@@ -22,16 +22,16 @@ class MusicList:
         self.play_count = None
 
         # 所属歌单音乐列表
-        self.musics = []
+        self.musics_table = []
 
     def get(self, index) -> Music:
-        return self.musics[index]
+        return self.musics_table[index]
 
     def __str__(self):
         ret = "MusicList [\n\tid: %s\n\tname: %s,\n\tplay_count: %d\n\tcreted: %s\n\tsize: %d" % (
-            self.id, self.name, self.play_count, self.created, len(self.musics))
+            self.id, self.name, self.play_count, self.created, len(self.musics_table))
         ret += "\n\tmusic:[\n"
-        for music in self.musics:
+        for music in self.musics_table:
             ret += music.__str__()
         ret += "\t]\n]"
         return ret

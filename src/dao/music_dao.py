@@ -60,10 +60,10 @@ class MusicDao:
         self.conn.execute(sql, self.__music_2_row(music))
         self.conn.commit()
 
-    def batch_insert(self, musics: list):
+    def batch_insert(self, musics_table: list):
         """ 批量插入 """
         sql = "insert into t_music values (null, ?, ?, ?, ?, ?, ?, ?)"
-        for m in musics:
+        for m in musics_table:
             self.conn.execute(sql, self.__music_2_row(m))
         self.conn.commit()
 
