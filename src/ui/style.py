@@ -44,11 +44,10 @@ class Style(object):
         navigation.setContextMenuPolicy(Qt.CustomContextMenu)
 
     @staticmethod
-    def init_footer_style(slider_volume: QSlider, footer: QWidget, volume: int, btn_zoom: QPushButton, width: int,
+    def init_footer_style( footer: QWidget,  btn_zoom: QPushButton, width: int,
                           height: int):
         # ------------------ footer ------------------ #
-        slider_volume.setValue(volume)
-        slider_volume.setCursor(Qt.PointingHandCursor)
+
         qss = open("./resource/qss/footer.qss", "r", encoding="utf-8")
         footer.setStyleSheet(qss.read())
         qss.close()
